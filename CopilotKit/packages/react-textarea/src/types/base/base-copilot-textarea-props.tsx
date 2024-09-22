@@ -6,7 +6,7 @@ import { BaseCopilotTextareaApiConfig } from "./autosuggestions-bare-function";
  * `BaseCopilotTextareaProps` defines the properties for the `BaseCopilotTextarea` component.
  */
 export interface BaseCopilotTextareaProps
-  extends Omit<TextareaHTMLAttributes<HTMLDivElement>, "onChange"> {
+  extends Omit<TextareaHTMLAttributes<HTMLDivElement>, "onChange" | "onKeyDown"> {
   /**
    * Determines whether the CopilotKit branding should be disabled. Default is `false`.
    */
@@ -46,6 +46,13 @@ export interface BaseCopilotTextareaProps
    * The shortcut to use to open the editor popover window. Default is `"Cmd-k"`.
    */
   shortcut?: string;
+
+  /**
+   * Callback invoked when a `keydown` event is triggered on the textarea element.
+   */
+  onKeyDown?: (
+    event: Partial<React.KeyboardEvent<HTMLTextAreaElement>> | React.KeyboardEvent<HTMLDivElement>,
+  ) => void;
 
   /**
    * Configuration settings for the autosuggestions feature.
