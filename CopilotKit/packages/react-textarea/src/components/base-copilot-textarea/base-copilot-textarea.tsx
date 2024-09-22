@@ -23,7 +23,6 @@ import { HoveringToolbar } from "../hovering-toolbar/hovering-toolbar";
 import { makeRenderElementFunction } from "./render-element";
 import { makeRenderPlaceholderFunction } from "./render-placeholder";
 import { TrackerTextEditedSinceLastCursorMovement } from "./track-cursor-moved-since-last-text-change";
-import { useAddBrandingCss } from "./use-add-branding-css";
 
 /**
  * Purpose: to be used as the `ref` type for `CopilotTextarea` and `BaseCopilotTextarea`.
@@ -222,7 +221,6 @@ const BaseCopilotTextareaWithHoveringContext = React.forwardRef(
       ...propsToForward
     } = props;
 
-    useAddBrandingCss(suggestionStyleAugmented, disableBranding);
     usePopulateCopilotTextareaRef(editor, ref);
 
     const moddedClassName = (() => {
@@ -261,7 +259,6 @@ const BaseCopilotTextareaWithHoveringContext = React.forwardRef(
         />
         <HoveringToolbar
           apiConfig={autosuggestionsConfig.apiConfig}
-          contextCategories={autosuggestionsConfig.contextCategories}
           hoverMenuClassname={hoverMenuClassname}
         />
         <Editable

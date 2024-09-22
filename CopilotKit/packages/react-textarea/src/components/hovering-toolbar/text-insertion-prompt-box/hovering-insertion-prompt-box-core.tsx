@@ -1,17 +1,16 @@
+import { useCallback, useEffect, useRef, useState } from "react";
 import useAutosizeTextArea from "../../../hooks/misc/use-autosize-textarea";
 import {
   EditingEditorState,
   Generator_InsertionOrEditingSuggestion,
 } from "../../../types/base/autosuggestions-bare-function";
 import { SourceSearchBox } from "../../source-search-box/source-search-box";
-import { DocumentPointer, useCopilotContext } from "@copilotkit/react-core";
 import { Button } from "../../ui/button";
 import { Label } from "../../ui/label";
-import { useCallback, useEffect, useRef, useState } from "react";
 
+import { MdArrowForward, MdCheck } from "react-icons/md";
 import { streamPromiseFlatten } from "../../../lib/stream-promise-flatten";
 import { useHoveringEditorContext } from "../hovering-editor-provider";
-import { MdArrowForward, MdCheck } from "react-icons/md";
 
 export type SuggestionState = {
   editorState: EditingEditorState;
@@ -21,17 +20,13 @@ export interface HoveringInsertionPromptBoxCoreProps {
   state: SuggestionState;
   performInsertion: (insertedText: string) => void;
   insertionOrEditingFunction: Generator_InsertionOrEditingSuggestion;
-  contextCategories: string[];
 }
 
 export const HoveringInsertionPromptBoxCore = ({
   performInsertion,
   state,
   insertionOrEditingFunction,
-  contextCategories,
 }: HoveringInsertionPromptBoxCoreProps) => {
-  const { getDocumentsContext } = useCopilotContext();
-
   const [editSuggestion, setEditSuggestion] = useState<string>("");
   const [suggestionIsLoading, setSuggestionIsLoading] = useState<boolean>(false);
 
@@ -43,13 +38,6 @@ export const HoveringInsertionPromptBoxCore = ({
 
   const adjustmentTextAreaRef = useRef<HTMLTextAreaElement>(null);
   const suggestionTextAreaRef = useRef<HTMLTextAreaElement>(null);
-
-  const [filePointers, setFilePointers] = useState<DocumentPointer[]>([]);
-
-  const [suggestedFiles, setSuggestedFiles] = useState<DocumentPointer[]>([]);
-  useEffect(() => {
-    setSuggestedFiles(getDocumentsContext(contextCategories));
-  }, [contextCategories, getDocumentsContext]);
 
   useAutosizeTextArea(suggestionTextAreaRef, editSuggestion || "");
   useAutosizeTextArea(adjustmentTextAreaRef, adjustmentPrompt || "");
@@ -130,7 +118,6 @@ export const HoveringInsertionPromptBoxCore = ({
     const adjustmentSuggestionTextStreamPromise = insertionOrEditingFunction(
       modificationState,
       adjustmentPrompt,
-      filePointers,
       new AbortController().signal,
     );
     const adjustmentSuggestionTextStream = streamPromiseFlatten(
@@ -138,13 +125,7 @@ export const HoveringInsertionPromptBoxCore = ({
     );
 
     setGeneratingSuggestion(adjustmentSuggestionTextStream);
-  }, [
-    adjustmentPrompt,
-    editSuggestion,
-    state.editorState,
-    insertionOrEditingFunction,
-    filePointers,
-  ]);
+  }, [adjustmentPrompt, editSuggestion, state.editorState, insertionOrEditingFunction]);
 
   const isLoading = suggestionIsLoading;
 
@@ -249,19 +230,7 @@ export const HoveringInsertionPromptBoxCore = ({
   return (
     <div className="w-full flex flex-col items-start relative gap-2">
       {AdjustmentPromptComponent}
-      {sourceSearchWord !== undefined && (
-        <SourceSearchBox
-          searchTerm={sourceSearchWord}
-          suggestedFiles={suggestedFiles}
-          onSelectedFile={(filePointer) => {
-            setAdjustmentPrompt(adjustmentPrompt.replace(new RegExp(`@${sourceSearchWord}$`), ""));
-            setFilePointers((prev) => [...prev, filePointer]);
-
-            // focus back on the adjustment prompt, and move the cursor to the end
-            adjustmentTextAreaRef.current?.focus();
-          }}
-        />
-      )}
+      {sourceSearchWord !== undefined && <SourceSearchBox searchTerm={sourceSearchWord} />}
       {generatingSuggestion ? SuggestionComponent : null}
       {generatingSuggestion ? SubmitComponent : null}
     </div>

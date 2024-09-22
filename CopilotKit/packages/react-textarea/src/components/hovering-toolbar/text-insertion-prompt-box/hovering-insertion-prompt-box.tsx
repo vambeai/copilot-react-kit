@@ -1,15 +1,14 @@
-import { HoveringInsertionPromptBoxCore } from "./hovering-insertion-prompt-box-core";
 import {
   EditingEditorState,
   InsertionEditorApiConfig,
 } from "../../../types/base/autosuggestions-bare-function";
+import { HoveringInsertionPromptBoxCore } from "./hovering-insertion-prompt-box-core";
 
 export interface Props {
   editorState: EditingEditorState;
   apiConfig: InsertionEditorApiConfig;
   performInsertion: (insertedText: string) => void;
   closeWindow: () => void;
-  contextCategories: string[];
 }
 
 export const HoveringInsertionPromptBox = (props: Props) => {
@@ -24,7 +23,6 @@ export const HoveringInsertionPromptBox = (props: Props) => {
         }}
         insertionOrEditingFunction={props.apiConfig.insertionOrEditingFunction}
         performInsertion={props.performInsertion}
-        contextCategories={props.contextCategories}
       />
     </div>
   );

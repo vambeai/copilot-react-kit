@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useMakeStandardAutosuggestionFunction } from "../../hooks/make-autosuggestions-function/use-make-standard-autosuggestions-function";
-import { useMakeStandardInsertionOrEditingFunction } from "../../hooks/make-autosuggestions-function/use-make-standard-insertion-function";
 import { HTMLCopilotTextAreaElement } from "../../types";
 import { BaseCopilotTextareaProps } from "../../types/base/base-copilot-textarea-props";
 import { BaseCopilotTextarea } from "../base-copilot-textarea/base-copilot-textarea";
@@ -23,29 +22,7 @@ export const CopilotTextarea = React.forwardRef(
       ...forwardedProps
     } = props;
 
-    console.log("CopilotTextarea: Full props", props);
-    console.log("CopilotTextarea: createSuggestionFunction", createSuggestionFunction);
-    console.log("CopilotTextarea: insertionOrEditingFunction", insertionOrEditingFunction);
-
-    useEffect(() => {
-      console.log(
-        "CopilotTextarea: useEffect - createSuggestionFunction",
-        createSuggestionFunction,
-      );
-      console.log(
-        "CopilotTextarea: useEffect - insertionOrEditingFunction",
-        insertionOrEditingFunction,
-      );
-    }, [createSuggestionFunction, insertionOrEditingFunction]);
-
     const autosuggestionsFunction = useMakeStandardAutosuggestionFunction(createSuggestionFunction);
-
-    console.log("CopilotTextarea: autosuggestionsFunction", autosuggestionsFunction);
-
-    if (!createSuggestionFunction || !insertionOrEditingFunction) {
-      console.log("CopilotTextarea: Required functions are not available yet");
-      return null; // or return a loading state
-    }
 
     return (
       <>

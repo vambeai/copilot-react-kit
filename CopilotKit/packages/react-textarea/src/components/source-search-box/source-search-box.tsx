@@ -1,24 +1,8 @@
 import { useState } from "react";
-import {
-  Command,
-  CommandDialog,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  CommandSeparator,
-  CommandShortcut,
-} from "../ui/command";
-
-import { Calculator, Calendar, CreditCard, Settings, Smile, User } from "lucide-react";
-
-import { DocumentPointer } from "@copilotkit/react-core";
+import { Command, CommandEmpty, CommandInput, CommandList, CommandSeparator } from "../ui/command";
 
 export interface SourceSearchBoxProps {
   searchTerm: string;
-  suggestedFiles: DocumentPointer[];
-  onSelectedFile: (filePointer: DocumentPointer) => void;
 }
 
 export function SourceSearchBox(props: SourceSearchBoxProps) {
@@ -49,31 +33,6 @@ export function SourceSearchBox(props: SourceSearchBoxProps) {
       />
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
-
-        <CommandGroup heading="Available resources">
-          {props.suggestedFiles.map((filePointer) => {
-            return (
-              <CommandItem
-                key={`word-${filePointer.sourceApplication}.${filePointer.name}`}
-                value={filePointer.name}
-                onSelect={(value) => {
-                  props.onSelectedFile(filePointer);
-                }}
-              >
-                <div className=" px-3  flex flex-row gap-1 items-center">
-                  <Logo width="20px" height="20px">
-                    <img
-                      src={filePointer.iconImageUri}
-                      alt={filePointer.sourceApplication}
-                      className="w-full h-full"
-                    />
-                  </Logo>
-                  {filePointer.name}
-                </div>
-              </CommandItem>
-            );
-          })}
-        </CommandGroup>
 
         {/* <CommandGroup heading="Suggestions">
           <CommandItem

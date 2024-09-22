@@ -15,7 +15,6 @@ import { HoveringInsertionPromptBox } from "./text-insertion-prompt-box";
 
 export interface HoveringToolbarProps {
   apiConfig: InsertionEditorApiConfig;
-  contextCategories: string[];
   hoverMenuClassname: string | undefined;
 }
 
@@ -128,7 +127,6 @@ export const HoveringToolbar = (props: HoveringToolbarProps) => {
               });
               setIsDisplayed(false);
             }}
-            contextCategories={props.contextCategories}
           />
         )}
       </Menu>
