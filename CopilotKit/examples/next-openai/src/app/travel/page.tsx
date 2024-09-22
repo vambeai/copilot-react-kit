@@ -1,10 +1,10 @@
 "use client";
 
-import { CopilotChat } from "@copilotkit/react-ui";
-import "./styles.css";
 import { CopilotKit, useCopilotAction } from "@copilotkit/react-core";
-import { useState } from "react";
+import { CopilotChat } from "@copilotkit/react-ui";
 import Image from "next/image";
+import { useState } from "react";
+import "./styles.css";
 
 interface BookableItem {
   name: string;
@@ -55,7 +55,13 @@ function TravelPlanner() {
             <p className="text-sm">{args.description || ""}</p>
           </div>
           {status == "complete" && (
-            <Image className="rounded-b-lg" src={args.image || ""} alt={args.title || ""} />
+            <Image
+              className="rounded-b-lg"
+              src={args.image || ""}
+              alt={args.title || ""}
+              width={100}
+              height={100}
+            />
           )}
         </div>
       );
