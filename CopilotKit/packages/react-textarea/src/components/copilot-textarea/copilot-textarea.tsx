@@ -11,6 +11,8 @@ export interface CopilotTextareaProps
   textareaPurpose: string;
   createSuggestionFunction: (...args: any[]) => Promise<string>;
   insertionOrEditingFunction: (...args: any[]) => Promise<ReadableStream<string>>;
+  debounceTime?: number;
+  disableWhenEmpty?: boolean;
 }
 
 export const CopilotTextarea = React.forwardRef(
@@ -19,6 +21,8 @@ export const CopilotTextarea = React.forwardRef(
       createSuggestionFunction,
       insertionOrEditingFunction,
       textareaPurpose,
+      debounceTime,
+      disableWhenEmpty,
       ...forwardedProps
     } = props;
 
@@ -30,6 +34,8 @@ export const CopilotTextarea = React.forwardRef(
           ref={ref}
           {...forwardedProps}
           baseAutosuggestionsConfig={{
+            debounceTime,
+            disableWhenEmpty,
             textareaPurpose,
             apiConfig: {
               autosuggestionsFunction: autosuggestionsFunction,
