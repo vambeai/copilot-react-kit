@@ -1,160 +1,106 @@
-> Copilot Cloud v1 has been released! 🎉 [Read more about it here](https://ai88.substack.com/p/copilotkit-v1-launch).
+# CopilotTextarea
 
-<div align="center">
-  <a href="https://copilotkit.ai" target="_blank">
-    <img src="./assets/banner.png" alt="CopilotKit Logo">
-  </a>
+CopilotTextarea is a React component that provides an AI-powered textarea with autocompletion functionality. It's a fork of CopilotKit, designed to allow for more flexible and custom implementations without being tied to a specific cloud solution.
 
-  <br/>
+## Installation
 
-  <strong>
-    [FORKED] Love CopilotKit, but they inforce a way to makes calls and recieve them.
-  </strong>
-</div>
+To install CopilotTextarea, run the following command:
 
-<br/>
+```bash
+npm install copilot-react-textarea
+```
 
-<div align="center">
-  <a href="https://www.npmjs.com/package/@copilotkit/react-core" target="_blank">
-    <img src="https://img.shields.io/npm/v/%40copilotkit%2Freact-core?logo=npm&logoColor=%23FFFFFF&label=Version&color=%236963ff" alt="NPM">
-  </a>
-  <img src="https://img.shields.io/github/license/copilotkit/copilotkit?color=%236963ff&label=License" alt="MIT">
-  <a href="https://discord.gg/6dffbvGU3D" target="_blank">
-    <img src="https://img.shields.io/discord/1122926057641742418?logo=discord&logoColor=%23FFFFFF&label=Discord&color=%236963ff" alt="Discord">
-  </a>
-</div>
-<br/>
+or if you're using yarn:
 
-<div align="center">
-  <a href="https://discord.gg/6dffbvGU3D?ref=github_readme" target="_blank">
-    <img src="./assets/btn_discord.png" alt="CopilotKit Discord" height="40px">
-  </a>
-  <a href="https://docs.copilotkit.ai?ref=github_readme" target="_blank">
-    <img src="./assets/btn_docs.png" alt="CopilotKit GitHub" height="40px">
-  </a>
-  <a href="https://cloud.copilotkit.ai?ref=github_readme" target="_blank">
-    <img src="./assets/btn_cloud.png" alt="CopilotKit GitHub" height="40px">
-  </a>
-</div>
+```bash
+yarn add copilot-react-textarea
+```
 
-<br/>
-<div align="center">
-  <a href="https://www.producthunt.com/posts/copilotkit" target="_blank">
-    <img src="https://api.producthunt.com/widgets/embed-image/v1/top-post-badge.svg?post_id=428778&theme=light&period=daily">
-  </a>
-</div>
+## Usage
 
-<br />
+Here's an example of how to use the CopilotTextarea component:
 
-<div align="center">
-  <img src="./assets/animated-banner.gif" alt="CopilotKit Screenshot" style="border-radius: 15px;" />
-</div>
+```tsx
+import { CopilotTextarea } from "copilot-react-textarea";
+import { useState, type ChangeEvent } from "react";
 
-<br />
+function YourComponent() {
+  const [value, setValue] = useState("");
 
-<div>
-<p>
-  👉 Check out the docs at <a href="https://docs.copilotkit.ai?ref=github_readme" target="_blank">https://docs.copilotkit.ai</a>
-</p>
-</div>
+  const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    setValue(e.target.value);
+  };
 
-**Table of Contents**
+  return (
+    <CopilotTextarea
+      placeholder="Enter text here..."
+      className="min-h-[60px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+      rows={5}
+      cols={50}
+      onChange={handleChange}
+      value={value}
+      textareaPurpose="chat"
+      createSuggestionFunction={async (data: {
+        textAfterCursor: string;
+        textBeforeCursor: string;
+      }): Promise<string> => {
+        // Implement your autocomplete logic here
+        return "Autocomplete suggestion";
+      }}
+      insertionOrEditingFunction={async (
+        editorState: any
+      ): Promise<ReadableStream<string>> => {
+        // Implement your insertion or editing logic here
+        const stream = new ReadableStream({
+          start(controller) {
+            controller.enqueue("Inserted text");
+            controller.close();
+          },
+        });
+        return stream;
+      }}
+      onKeyDown={(event) => {
+        // Handle key down events
+      }}
+      disableWhenEmpty={true}
+    />
+  );
+}
+```
 
-- [Getting Started](#getting-started)
-  - [Quickstart \& Tutorials](#quickstart--tutorials)
-  - [Examples \& Starter Templates](#examples--starter-templates)
-- [Building Blocks](#building-blocks)
-  - [🧩 Components](#-components)
-  - [⚡️ Hooks](#️-hooks)
-- [Contributing](#contributing)
-- [Get in touch](#get-in-touch)
-- [License](#license)
+## Props
 
-## Getting Started
+The `CopilotTextarea` component accepts the following props:
 
-### Quickstart & Tutorials
+- `placeholder`: Placeholder text for the textarea
+- `className`: CSS class for styling the textarea
+- `rows`: Number of visible text lines
+- `cols`: Visible width of the textarea
+- `onChange`: Function to handle changes in the textarea
+- `value`: Current value of the textarea
+- `textareaPurpose`: Purpose of the textarea (e.g., "chat")
+- `createSuggestionFunction`: Async function to generate autocomplete suggestions
+- `insertionOrEditingFunction`: Async function to handle text insertion or editing
+- `onKeyDown`: Function to handle keydown events
+- `disableWhenEmpty`: Boolean to disable the textarea when empty
 
-There are several easy ways to get started with CopilotKit:
+## Features
 
-- [**Quickstart: Chatbot:**](https://docs.copilotkit.ai/quickstart-chatbot?ref=github_readme) In just two minutes, add an AI Chatbot to your app with the ability to read application state and take actions.
-- [**Tutorial: Todo List Copilot:**](https://docs.copilotkit.ai/tutorial-ai-todo-list-copilot/overview?ref=github_readme) For a better deep dive into CopilotKit, take a simple todo list app and supercharge it with an AI chat popup.
-- [**Tutorial: Textarea Autocomplete:**](https://docs.copilotkit.ai/tutorial-textarea/overview?ref=github_readme) For a better deep dive into CopilotKit, we'll take a simple email client app and add an AI-powered textarea to it with autocompeltions and AI insertions/edits.
+- AI-powered autocompletion
+- Customizable styling
+- Flexible autocomplete and text insertion functions
+- Key event handling
 
-### Examples & Starter Templates
+## Motivation
 
-<table align="center">
-  <tr>
-    <td align="center" valign="top">
-      🕹️ PowerPoint Clone + Copilot <br/>
-      <a href="https://go.copilotkit.ai/GitHubPresentation">https://github.com/CopilotKit/demo-presentation</a> <br/><br>
-      <a href="https://go.copilotkit.ai/GitHubPresentation">
-        <img alt="Presentation" src="https://github.com/CopilotKit/CopilotKit/assets/131273140/6e1a448b-d153-431f-8132-46a668d8a0d1" width="240px" style="max-width:100%; border-radius: 10px;"/>
-      </a>
-    </td>
-    <td align="center" valign="top">
-      🕹️ Simple Todo App + Copilot <br/>
-      <a href="https://go.copilotkit.ai/GitHubToDo">https://github.com/CopilotKit/demo-todo</a> <br/><br>
-      <a href="https://go.copilotkit.ai/GitHubToDo">
-        <img alt="Todo App" src="https://github.com/CopilotKit/CopilotKit/assets/131273140/63798c02-1892-4d2d-bc9f-2994b7c88694" width="240px" style="max-width:100%; border-radius: 10px;"/>
-      </a>
-    </td>
-  </tr>
-  <tr>
-    <td align="center" valign="top">
-      🕹️ Spreadsheets + Copilot <br/>
-      <a href="https://go.copilotkit.ai/GitHubSpreadsheet">https://github.com/CopilotKit/demo-spreadsheet</a> <br/><br>
-      <a href="https://go.copilotkit.ai/GitHubSpreadsheet">
-        <img alt="Presentation-Demo" src="https://github.com/CopilotKit/CopilotKit/assets/131273140/871e4c9c-0ced-490b-9e3f-8594de7c5c89" width="240px" style="max-width:100%; border-radius: 10px;"/>
-      </a>
-    </td>
-    <td align="center" valign="top">
-      🕹️ PowerPoint Clone + Copilot + Voice Control <br/>
-      <a href="https://go.copilotkit.ai/GitHubPresentationVoice">https://github.com/CopilotKit/demo-presentation-voice</a> <br/><br>
-      <a href="https://go.copilotkit.ai/GitHubPresentationVoice">
-        <img alt="Presentation-Voice" src="https://github.com/CopilotKit/CopilotKit/assets/131273140/6e1a448b-d153-431f-8132-46a668d8a0d1" width="240px" style="max-width:100%; border-radius: 10px;"/>
-      </a>
-    </td>
-  </tr>
-</table>
+CopilotTextarea is a fork of CopilotKit, created with the motivation to provide more flexibility in custom implementations. The original CopilotKit was tightly coupled with their cloud solution, which limited its use in projects that required custom backend integrations or self-hosted solutions.
 
-## Building Blocks
-
-> 💡 Want to learn more? Check out the [CopilotKit Documentation](https://docs.copilotkit.ai?ref=github_readme).
-
-### 🧩 Components
-
-- [**`<CopilotTextarea />`**](https://docs.copilotkit.ai/reference/components/CopilotTextarea?ref=github_readme): An AI-powered textarea with autocompletions and AI-powered insertions/edits.
-- [**`<CopilotPopup />`**](https://docs.copilotkit.ai/reference/components/CopilotPopup?ref=github_readme): AI-powered chat floating chat popup component.
-- [**`<CopilotSidebar />`**](https://docs.copilotkit.ai/reference/components/CopilotSidebar?ref=github_readme): AI-powered chat sidebar component.
-- [**`<CopilotChat />`**](https://docs.copilotkit.ai/reference/components/CopilotChat?ref=github_readme): AI-powered plain chat component.
-
-### ⚡️ Hooks
-
-- [**`useCopilotReadable`**](https://docs.copilotkit.ai/reference/hooks/useCopilotReadable?ref=github_readme): Provide in-app state and any other information to your Copilot.
-- [**`useCopilotAction`**](https://docs.copilotkit.ai/reference/hooks/useCopilotAction?ref=github_readme): Enable your Copilot to perform actions and render custom-generated UI in the chat.
-- [**`useCopilotChat`**](https://docs.copilotkit.ai/reference/hooks/useCopilotChat?ref=github_readme): Directly interact with the Copilot chat instance to add messages and manipulate the chat history.
-- [**`useCopilotChatSuggestions`**](https://docs.copilotkit.ai/reference/hooks/useCopilotChatSuggestions?ref=github_readme): Integrate AI-powered chat follow-up suggestions that are aware of your app's state and chat history.
+By forking the project, we've made it possible to use these open-source components with your own implementation of autocomplete and text generation functions. This allows developers to integrate CopilotTextarea with their preferred AI services or custom backend solutions without being locked into a specific cloud provider.
 
 ## Contributing
 
-Thanks for your interest in contributing to CopilotKit! 💜
-
-We value all contributions, whether it's through code, documentation, creating demo apps, or just spreading the word.
-
-Here are a few useful resources to help you get started:
-
-- For code contributions, [check out the contribution guide](https://docs.copilotkit.ai/code-contributions/how-to-contribute?ref=github_readme).
-- For documentation-related contributions, [check out the documentation Contributions guide](https://docs.copilotkit.ai/code-contributions/how-to-contribute?ref=github_readme).
-- Want to contribute but not sure how? [Join our Discord](https://discord.gg/6dffbvGU3D) and we'll help you out!
-
-> 💡 **NOTE:** All contributions must be submitted via a pull request and be reviewed by our team. This is to ensure that all contributions are of high quality and align with the project's goals.
-
-## Get in touch
-
-You are welcome to join our [Discord](https://discord.gg/6dffbvGU3D) and chat with our team and other community members.
-
-Additionally, you can reach out to us at [hello@copilotkit.ai](mailto:hello@copilotkit.ai).
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
-This repository's source code is available under the [MIT License].
+This project is licensed under the MIT License.
