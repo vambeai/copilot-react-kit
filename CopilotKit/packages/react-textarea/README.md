@@ -1,46 +1,104 @@
-<div align="center">
-  <a href="https://copilotkit.ai" target="_blank">
-    <img src="https://github.com/copilotkit/copilotkit/raw/main/assets/banner.png" alt="CopilotKit Logo">
-  </a>
+# CopilotTextarea
 
-  <br/>
+CopilotTextarea is a React component that provides an AI-powered textarea with autocompletion functionality. It's a fork of CopilotKit, designed to allow for more flexible and custom implementations without being tied to a specific cloud solution.
 
-  <strong>
-    CopilotKit is the open-source framework for integrating powerful AI Copilots into any application. Easily implement custom AI Chatbots, AI Agents, AI Textareas, and more.
-  </strong>
-</div>
+## Installation
 
-<br/>
+To install CopilotTextarea, run the following command:
 
-<div align="center">
-  <a href="https://www.npmjs.com/package/@copilotkit/react-core" target="_blank">
-    <img src="https://img.shields.io/npm/v/%40copilotkit%2Freact-core?logo=npm&logoColor=%23FFFFFF&label=Version&color=%236963ff" alt="NPM">
-  </a>
-  <img src="https://img.shields.io/github/license/copilotkit/copilotkit?color=%236963ff&label=License" alt="MIT">
-  <a href="https://discord.gg/6dffbvGU3D" target="_blank">
-    <img src="https://img.shields.io/discord/1122926057641742418?logo=discord&logoColor=%23FFFFFF&label=Discord&color=%236963ff" alt="Discord">
-  </a>
-</div>
-<br/>
+```bash
+npm install copilot-react-textarea
+```
 
-<div align="center">
-  <a href="https://discord.gg/6dffbvGU3D?ref=github_readme" target="_blank">
-    <img src="https://github.com/copilotkit/copilotkit/raw/main/assets/btn_discord.png" alt="CopilotKit Discord" height="40px">
-  </a>
-  <a href="https://docs.copilotkit.ai?ref=github_readme" target="_blank">
-    <img src="https://github.com/copilotkit/copilotkit/raw/main/assets/btn_docs.png" alt="CopilotKit GitHub" height="40px">
-  </a>
-  <a href="https://cloud.copilotkit.ai?ref=github_readme" target="_blank">
-    <img src="https://github.com/copilotkit/copilotkit/raw/main/assets/btn_cloud.png" alt="CopilotKit GitHub" height="40px">
-  </a>
-</div>
+or if you're using yarn:
 
-<br />
+```bash
+yarn add copilot-react-textarea
+```
 
-<div align="center">
-  <img src="https://github.com/CopilotKit/CopilotKit/raw/main/assets/animated-banner.gif" alt="CopilotKit Screenshot" style="border-radius: 15px;" />
-</div>
+## Usage
 
-# Documentation
+Here's an example of how to use the CopilotTextarea component:
 
-To get started with CopilotKit, please check out the [documentation](https://docs.copilotkit.ai).
+```tsx
+import { CopilotTextarea } from "copilot-react-textarea";
+import { useState, type ChangeEvent } from "react";
+
+function YourComponent() {
+  const [value, setValue] = useState("");
+
+  const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    setValue(e.target.value);
+  };
+
+  return (
+    <CopilotTextarea
+      placeholder="Enter text here..."
+      className="min-h-[60px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+      rows={5}
+      cols={50}
+      onChange={handleChange}
+      value={value}
+      textareaPurpose="chat"
+      createSuggestionFunction={async (data: {
+        textAfterCursor: string;
+        textBeforeCursor: string;
+      }): Promise<string> => {
+        // Implement your autocomplete logic here
+        return "Autocomplete suggestion";
+      }}
+      insertionOrEditingFunction={async (editorState: any): Promise<ReadableStream<string>> => {
+        // Implement your insertion or editing logic here
+        const stream = new ReadableStream({
+          start(controller) {
+            controller.enqueue("Inserted text");
+            controller.close();
+          },
+        });
+        return stream;
+      }}
+      onKeyDown={(event) => {
+        // Handle key down events
+      }}
+      disableWhenEmpty={true}
+    />
+  );
+}
+```
+
+## Props
+
+The `CopilotTextarea` component accepts the following props:
+
+- `placeholder`: Placeholder text for the textarea
+- `className`: CSS class for styling the textarea
+- `rows`: Number of visible text lines
+- `cols`: Visible width of the textarea
+- `onChange`: Function to handle changes in the textarea
+- `value`: Current value of the textarea
+- `textareaPurpose`: Purpose of the textarea (e.g., "chat")
+- `createSuggestionFunction`: Async function to generate autocomplete suggestions
+- `insertionOrEditingFunction`: Async function to handle text insertion or editing
+- `onKeyDown`: Function to handle keydown events
+- `disableWhenEmpty`: Boolean to disable the textarea when empty
+
+## Features
+
+- AI-powered autocompletion
+- Customizable styling
+- Flexible autocomplete and text insertion functions
+- Key event handling
+
+## Motivation
+
+CopilotTextarea is a fork of CopilotKit, created with the motivation to provide more flexibility in custom implementations. The original CopilotKit was tightly coupled with their cloud solution, which limited its use in projects that required custom backend integrations or self-hosted solutions.
+
+By forking the project, we've made it possible to use these open-source components with your own implementation of autocomplete and text generation functions. This allows developers to integrate CopilotTextarea with their preferred AI services or custom backend solutions without being locked into a specific cloud provider.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is licensed under the MIT License.
