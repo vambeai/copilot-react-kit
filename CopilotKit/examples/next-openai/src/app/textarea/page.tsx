@@ -50,7 +50,7 @@ function TextAreas() {
   return (
     <div className="w-full h-full gap-10 flex flex-col items-center p-10">
       <div className="flex w-1/2 items-start gap-3">
-        <span className="text-3xl text-white whitespace-nowrap">Textarea Purpose:</span>
+        <span className="text-3xl text-white whitespace-nowrap">Textarea Purpos matiassse:</span>
         <textarea
           className="p-2 h-12 rounded-lg flex-grow overflow-x-auto overflow-y-hidden whitespace-nowrap"
           value={textareaPurpose}
@@ -66,20 +66,29 @@ function TextAreas() {
           color: "white",
           opacity: 0.5,
         }}
-        autosuggestionsConfig={{
-          textareaPurpose: textareaPurpose,
-          contextCategories: [salesReplyCategoryId],
-          chatApiConfigs: {
-            suggestionsApiConfig: {
-              // makeSystemPrompt: makeSystemPrompt,
-              // fewShotMessages: fewShotMessages,
-              maxTokens: 5,
-              stop: ["\n", ".", ","],
-            },
-            insertionApiConfig: {},
-          },
-          debounceTime: 250,
+        textareaPurpose={textareaPurpose}
+        createSuggestionFunction={async (editorState: any): Promise<string> => {
+          console.log("editorState", editorState);
+          const lastWord = editorState.textBeforeCursor.split(" ").pop() || "";
+          const suggestions: { [key: string]: string } = {
+            Hello: " world",
+            CopilotTextarea: " is awesome",
+            The: " quick brown fox",
+            AI: " is revolutionizing",
+          };
+          return suggestions[lastWord] || ` ${lastWord}...`;
         }}
+        insertionOrEditingFunction={async (editorState: any): Promise<ReadableStream<string>> => {
+          console.log("insertionOrEditingFunction", editorState);
+          const stream = new ReadableStream({
+            start(controller) {
+              controller.enqueue("Hello world");
+              controller.close();
+            },
+          });
+          return stream;
+        }}
+        //debounceTime: 250,
       />
 
       <textarea
@@ -102,29 +111,3 @@ function TextAreas() {
     </div>
   );
 }
-
-// const makeSystemPrompt: MakeSystemPrompt = (textareaPurpose, contextString) => {
-//   return `
-// You are a versatile writing assistant.
-
-// The user is writing some text.
-// The purpose is: \"${textareaPurpose}\"
-
-// Your job is to guess what the user will write next AS BEST YOU CAN.
-// Only guess a SHORT distance ahead. Usually 1 sentence, or at most 1 paragraph.
-
-// Adjust yourself to the user's style and implied intent.
-
-// The user will provide both the text before and after the cursor. You should use this to infer what the user is likely to write next.
-// <TextAfterCursor>
-// <TextBeforeCursor>
-// <YourSuggestion>
-
-// If we need to add a whitespace character to the suggested text, make sure to explicitly add it in.
-
-// The following external context is also provided. Use it to help you make better suggestions!!!
-// \`\`\`
-// ${contextString}
-// \`\`\`
-// `;
-// };

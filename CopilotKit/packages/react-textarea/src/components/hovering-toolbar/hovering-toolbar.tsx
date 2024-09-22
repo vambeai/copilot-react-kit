@@ -1,9 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Editor, Location, Transforms } from "slate";
 import { useSlate, useSlateSelection } from "slate-react";
-import { HoveringInsertionPromptBox } from "./text-insertion-prompt-box";
-import { Menu, Portal } from "./hovering-toolbar-components";
-import { useHoveringEditorContext } from "./hovering-editor-provider";
 import {
   getFullEditorTextWithNewlines,
   getTextAroundSelection,
@@ -12,6 +9,9 @@ import {
   EditingEditorState,
   InsertionEditorApiConfig,
 } from "../../types/base/autosuggestions-bare-function";
+import { useHoveringEditorContext } from "./hovering-editor-provider";
+import { Menu, Portal } from "./hovering-toolbar-components";
+import { HoveringInsertionPromptBox } from "./text-insertion-prompt-box";
 
 export interface HoveringToolbarProps {
   apiConfig: InsertionEditorApiConfig;
