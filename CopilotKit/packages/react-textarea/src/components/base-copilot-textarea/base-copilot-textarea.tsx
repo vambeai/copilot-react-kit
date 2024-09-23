@@ -278,6 +278,7 @@ const BaseCopilotTextareaWithHoveringContext = React.forwardRef(
             props.onBlur?.(ev);
             clearAutocompletionsFromEditor(editor);
           }}
+          rows={props.rows ?? 2}
           {...propsToForward}
         />
       </Slate>
