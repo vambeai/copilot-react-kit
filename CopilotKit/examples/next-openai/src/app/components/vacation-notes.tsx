@@ -33,6 +33,7 @@ export function VacationNotes() {
           });
           return stream;
         }}
+        showGenerateShortcut={true}
         // I want to be able to accept this props on the future
         //debounceTime={250}
         //disableWhenEmpty={true}

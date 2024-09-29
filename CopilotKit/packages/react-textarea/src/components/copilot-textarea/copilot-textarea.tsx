@@ -13,6 +13,7 @@ export interface CopilotTextareaProps
   insertionOrEditingFunction: (...args: any[]) => Promise<ReadableStream<string>>;
   debounceTime?: number;
   disableWhenEmpty?: boolean;
+  showGenerateShortcut?: boolean;
 }
 
 export const CopilotTextarea = React.forwardRef(
@@ -23,6 +24,7 @@ export const CopilotTextarea = React.forwardRef(
       textareaPurpose,
       debounceTime,
       disableWhenEmpty,
+      showGenerateShortcut,
       ...forwardedProps
     } = props;
 
@@ -37,6 +39,7 @@ export const CopilotTextarea = React.forwardRef(
             debounceTime,
             disableWhenEmpty,
             textareaPurpose,
+            showGenerateShortcut,
             apiConfig: {
               autosuggestionsFunction: autosuggestionsFunction,
               insertionOrEditingFunction: insertionOrEditingFunction,
