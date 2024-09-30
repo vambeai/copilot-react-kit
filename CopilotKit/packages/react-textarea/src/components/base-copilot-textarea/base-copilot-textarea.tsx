@@ -141,12 +141,17 @@ const BaseCopilotTextareaWithHoveringContext = React.forwardRef(
       insertText,
       autosuggestionsConfig.disableWhenEmpty,
       shouldDisableAutosuggestions,
+      autosuggestionsConfig.showGenerateShortcut,
+      autosuggestionsConfig.shortcutKey ?? "k",
     );
 
     const onKeyDownHandlerForHoveringEditor = useCallback(
       (event: React.KeyboardEvent<HTMLDivElement>) => {
         if (
-          autosuggestionsConfig.shouldToggleHoveringEditorOnKeyPress(event, props.shortcut ?? "k")
+          autosuggestionsConfig.shouldToggleHoveringEditorOnKeyPress(
+            event,
+            autosuggestionsConfig.shortcutKey ?? "k",
+          )
         ) {
           event.preventDefault();
           setHoveringEditorIsDisplayed(!hoveringEditorIsDisplayed);
@@ -180,11 +185,7 @@ const BaseCopilotTextareaWithHoveringContext = React.forwardRef(
     }, [props.suggestionsStyle]);
 
     const renderElementMemoized = useMemo(() => {
-      return makeRenderElementFunction(
-        suggestionStyleAugmented,
-        autosuggestionsConfig.showGenerateShortcut,
-        props.shortcut ?? "k",
-      );
+      return makeRenderElementFunction(suggestionStyleAugmented);
     }, [suggestionStyleAugmented]);
 
     const renderPlaceholderMemoized = useMemo(() => {

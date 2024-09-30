@@ -14,6 +14,7 @@ export interface CopilotTextareaProps
   debounceTime?: number;
   disableWhenEmpty?: boolean;
   showGenerateShortcut?: boolean;
+  shortcutKey?: string;
 }
 
 export const CopilotTextarea = React.forwardRef(
@@ -25,6 +26,7 @@ export const CopilotTextarea = React.forwardRef(
       debounceTime,
       disableWhenEmpty,
       showGenerateShortcut,
+      shortcutKey,
       ...forwardedProps
     } = props;
 
@@ -40,6 +42,7 @@ export const CopilotTextarea = React.forwardRef(
             disableWhenEmpty,
             textareaPurpose,
             showGenerateShortcut,
+            shortcutKey,
             apiConfig: {
               autosuggestionsFunction: autosuggestionsFunction,
               insertionOrEditingFunction: insertionOrEditingFunction,

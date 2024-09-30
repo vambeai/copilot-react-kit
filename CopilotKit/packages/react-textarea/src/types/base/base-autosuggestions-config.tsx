@@ -58,6 +58,7 @@ export interface BaseAutosuggestionsConfig {
   debounceTime: number;
   apiConfig: BaseCopilotTextareaApiConfig;
   showGenerateShortcut: boolean;
+  shortcutKey: string;
 
   disableWhenEmpty: boolean;
   disabled: boolean;
@@ -115,6 +116,7 @@ export const defaultBaseAutosuggestionsConfig: Omit<
   disableWhenEmpty: true,
   disabled: false,
   showGenerateShortcut: true,
+  shortcutKey: "k",
   temporarilyDisableWhenMovingCursorWithoutChangingText: true,
   shouldToggleHoveringEditorOnKeyPress: defaultShouldToggleHoveringEditorOnKeyPress,
   shouldAcceptAutosuggestionOnKeyPress: defaultShouldAcceptAutosuggestionOnKeyPress,

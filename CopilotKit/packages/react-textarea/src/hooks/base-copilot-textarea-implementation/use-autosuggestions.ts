@@ -23,12 +23,16 @@ export function useAutosuggestions(
   insertAutocompleteSuggestion: (suggestion: AutosuggestionState) => void,
   disableWhenEmpty: boolean,
   disabled: boolean,
+  showGenerateShortcut: boolean,
+  shortcutKey: string,
 ): UseAutosuggestionsResult {
   const [previousAutocompleteState, setPreviousAutocompleteState] =
     useState<EditorAutocompleteState | null>(null);
 
   const [currentAutocompleteSuggestion, setCurrentAutocompleteSuggestion] =
     useState<AutosuggestionState | null>(null);
+
+  const isMac = useMemo(() => navigator.platform.toUpperCase().indexOf("MAC") >= 0, []);
 
   const awaitForAndAppendSuggestion: (
     editorAutocompleteState: EditorAutocompleteState,
@@ -38,6 +42,13 @@ export function useAutosuggestions(
       // early return if disabled
       if (disabled) {
         return;
+      }
+
+      if (showGenerateShortcut) {
+        setCurrentAutocompleteSuggestion({
+          text: `${isMac ? "⌘" : "Ctrl+"}${shortcutKey.toUpperCase()} to generate`,
+          point: editorAutocompleteState.cursorPoint,
+        });
       }
 
       if (

@@ -13,7 +13,6 @@ export function VacationNotes() {
         placeholder="What are your plans for your vacation?"
         textareaPurpose="Travel notes from the user's previous vacations. Likely written in a colloquial style, but adjust as needed."
         createSuggestionFunction={async (editorState: any): Promise<string> => {
-          console.log("editorState", editorState);
           const lastWord = editorState.textBeforeCursor.split(" ").pop() || "";
           const suggestions: { [key: string]: string } = {
             Hello: " world",
@@ -21,7 +20,12 @@ export function VacationNotes() {
             The: " quick brown fox",
             AI: " is revolutionizing",
           };
-          return suggestions[lastWord] || ` ${lastWord}...`;
+          // set a timeout to simulate a slow API call
+          return new Promise((resolve) =>
+            setTimeout(() => {
+              resolve(suggestions[lastWord] || ` ${lastWord}...`);
+            }, 10000),
+          );
         }}
         insertionOrEditingFunction={async (editorState: any): Promise<ReadableStream<string>> => {
           console.log("insertionOrEditingFunction", editorState);
@@ -33,6 +37,7 @@ export function VacationNotes() {
           });
           return stream;
         }}
+        //shortcutKey="k"
         showGenerateShortcut={true}
         // I want to be able to accept this props on the future
         //debounceTime={250}
