@@ -143,6 +143,7 @@ const BaseCopilotTextareaWithHoveringContext = React.forwardRef(
       shouldDisableAutosuggestions,
       autosuggestionsConfig.showGenerateShortcut,
       autosuggestionsConfig.shortcutKey ?? "k",
+      autosuggestionsConfig.language ?? "en",
     );
 
     const onKeyDownHandlerForHoveringEditor = useCallback(

@@ -15,6 +15,7 @@ export interface CopilotTextareaProps
   disableWhenEmpty?: boolean;
   showGenerateShortcut?: boolean;
   shortcutKey?: string;
+  language?: "en" | "es";
 }
 
 export const CopilotTextarea = React.forwardRef(
@@ -27,6 +28,7 @@ export const CopilotTextarea = React.forwardRef(
       disableWhenEmpty,
       showGenerateShortcut,
       shortcutKey,
+      language,
       ...forwardedProps
     } = props;
 
@@ -43,6 +45,7 @@ export const CopilotTextarea = React.forwardRef(
             textareaPurpose,
             showGenerateShortcut,
             shortcutKey,
+            language,
             apiConfig: {
               autosuggestionsFunction: autosuggestionsFunction,
               insertionOrEditingFunction: insertionOrEditingFunction,

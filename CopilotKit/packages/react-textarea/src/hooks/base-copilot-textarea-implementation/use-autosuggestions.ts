@@ -25,6 +25,7 @@ export function useAutosuggestions(
   disabled: boolean,
   showGenerateShortcut: boolean,
   shortcutKey: string,
+  language: "en" | "es",
 ): UseAutosuggestionsResult {
   const [previousAutocompleteState, setPreviousAutocompleteState] =
     useState<EditorAutocompleteState | null>(null);
@@ -33,6 +34,13 @@ export function useAutosuggestions(
     useState<AutosuggestionState | null>(null);
 
   const isMac = useMemo(() => navigator.platform.toUpperCase().indexOf("MAC") >= 0, []);
+
+  const translations = {
+    "to generate": {
+      en: "to generate",
+      es: "para generar",
+    },
+  };
 
   const awaitForAndAppendSuggestion: (
     editorAutocompleteState: EditorAutocompleteState,
@@ -46,7 +54,7 @@ export function useAutosuggestions(
 
       if (showGenerateShortcut) {
         setCurrentAutocompleteSuggestion({
-          text: `${isMac ? "⌘" : "Ctrl+"}${shortcutKey.toUpperCase()} to generate`,
+          text: `${isMac ? "⌘" : "Ctrl+"}${shortcutKey.toUpperCase()} ${translations["to generate"][language]}`,
           point: editorAutocompleteState.cursorPoint,
         });
       }

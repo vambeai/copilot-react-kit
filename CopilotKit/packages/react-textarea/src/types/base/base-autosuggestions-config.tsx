@@ -59,6 +59,7 @@ export interface BaseAutosuggestionsConfig {
   apiConfig: BaseCopilotTextareaApiConfig;
   showGenerateShortcut: boolean;
   shortcutKey: string;
+  language: "en" | "es";
 
   disableWhenEmpty: boolean;
   disabled: boolean;
@@ -117,6 +118,7 @@ export const defaultBaseAutosuggestionsConfig: Omit<
   disabled: false,
   showGenerateShortcut: true,
   shortcutKey: "k",
+  language: "en",
   temporarilyDisableWhenMovingCursorWithoutChangingText: true,
   shouldToggleHoveringEditorOnKeyPress: defaultShouldToggleHoveringEditorOnKeyPress,
   shouldAcceptAutosuggestionOnKeyPress: defaultShouldAcceptAutosuggestionOnKeyPress,
