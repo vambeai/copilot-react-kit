@@ -90,6 +90,10 @@ export const HoveringToolbar = (props: HoveringToolbarProps) => {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (ref.current && !ref.current.contains(event.target as Node)) {
+        console.log("click outside");
+        console.log(ref.current.contains(event.target as Node));
+        console.log(event.target);
+        console.log(ref.current);
         setIsDisplayed(false);
       }
     };
