@@ -21,6 +21,7 @@ export interface HoveringInsertionPromptBoxCoreProps {
   performInsertion: (insertedText: string) => void;
   insertionOrEditingFunction: Generator_InsertionOrEditingSuggestion;
   language: "en" | "es";
+  beginAdjustementCallback: () => void;
 }
 
 export const HoveringInsertionPromptBoxCore = ({
@@ -28,6 +29,7 @@ export const HoveringInsertionPromptBoxCore = ({
   state,
   insertionOrEditingFunction,
   language,
+  beginAdjustementCallback,
 }: HoveringInsertionPromptBoxCoreProps) => {
   const [editSuggestion, setEditSuggestion] = useState<string>("");
   const [suggestionIsLoading, setSuggestionIsLoading] = useState<boolean>(false);
@@ -108,6 +110,8 @@ export const HoveringInsertionPromptBoxCore = ({
     if (!adjustmentPrompt.trim()) {
       return;
     }
+
+    beginAdjustementCallback();
 
     // editor state includes the text being edited, and the text before/after the selection
     // if the current edit suggestion is not empty, then use *it* as the "selected text" - instead of the editor state's selected text

@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Editor, Location, Transforms } from "slate";
-import { useSlate, useSlateSelection, ReactEditor } from "slate-react";
+import { ReactEditor, useSlate, useSlateSelection } from "slate-react";
 import {
   getFullEditorTextWithNewlines,
   getTextAroundSelection,
@@ -84,36 +84,42 @@ export const HoveringToolbar = (props: HoveringToolbarProps) => {
   }
 
   return (
-      <Popover open={isDisplayed} onOpenChange={setIsDisplayed}>
-        <PopoverContent
-          ref={popoverRef}
-          className={
-            props.hoverMenuClassname ||
-            "z-50 flex flex-col justify-center items-center space-y-4 rounded-md border shadow-lg p-4 border-gray- bg-white"
-          }
-          style={{
-            position: "absolute",
-            left: `${position.x}px`,
-            top: `${position.y}px`,
-            width: "30rem",
-            overflowY: "auto"
-          }}
-        >
-          {isDisplayed && selection && (
-            <HoveringInsertionPromptBox
-              editorState={editorState(editor, selection)}
-              apiConfig={props.apiConfig}
-              closeWindow={() => setIsDisplayed(false)}
-              language={props.language}
-              performInsertion={(insertedText) => {
-                Transforms.delete(editor, { at: selection });
-                Transforms.insertText(editor, insertedText, { at: selection });
-                setIsDisplayed(false);
-              }}
-            />
-          )}
-        </PopoverContent>
-      </Popover>
+    <Popover open={isDisplayed} onOpenChange={setIsDisplayed}>
+      <PopoverContent
+        ref={popoverRef}
+        className={
+          props.hoverMenuClassname ||
+          "z-50 flex flex-col justify-center items-center space-y-4 rounded-md border shadow-lg p-4 border-gray- bg-white"
+        }
+        style={{
+          position: "absolute",
+          left: `${position.x}px`,
+          top: `${position.y}px`,
+          width: "30rem",
+          overflowY: "auto",
+        }}
+      >
+        {isDisplayed && selection && (
+          <HoveringInsertionPromptBox
+            editorState={editorState(editor, selection)}
+            apiConfig={props.apiConfig}
+            closeWindow={() => setIsDisplayed(false)}
+            language={props.language}
+            performInsertion={(insertedText) => {
+              Transforms.delete(editor, { at: selection });
+              Transforms.insertText(editor, insertedText, { at: selection });
+              setIsDisplayed(false);
+            }}
+            beginAdjustementCallback={() => {
+              setPosition((prevPosition) => ({
+                ...prevPosition,
+                y: prevPosition.y - 220,
+              }));
+            }}
+          />
+        )}
+      </PopoverContent>
+    </Popover>
   );
 };
 

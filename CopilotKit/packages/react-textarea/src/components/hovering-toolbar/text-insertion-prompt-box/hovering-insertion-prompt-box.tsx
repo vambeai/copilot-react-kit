@@ -10,6 +10,7 @@ export interface Props {
   performInsertion: (insertedText: string) => void;
   language: "en" | "es";
   closeWindow: () => void;
+  beginAdjustementCallback: () => void;
 }
 
 export const HoveringInsertionPromptBox = (props: Props) => {
@@ -21,6 +22,7 @@ export const HoveringInsertionPromptBox = (props: Props) => {
       language={props.language}
       insertionOrEditingFunction={props.apiConfig.insertionOrEditingFunction}
       performInsertion={props.performInsertion}
+      beginAdjustementCallback={props.beginAdjustementCallback}
     />
   );
 };
