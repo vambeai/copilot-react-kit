@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Editor, Location, Transforms } from "slate";
-import { useSlate, useSlateSelection } from "slate-react";
+import { useSlate, useSlateSelection, ReactEditor } from "slate-react";
 import {
   getFullEditorTextWithNewlines,
   getTextAroundSelection,
@@ -24,7 +24,7 @@ export const HoveringToolbar = (props: HoveringToolbarProps) => {
   const selection = useSlateSelection();
   const { isDisplayed, setIsDisplayed } = useHoveringEditorContext();
   const [position, setPosition] = useState({ x: 0, y: 0 });
-  const dialogRef = useRef<HTMLDivElement>(null); // Reference to the dialog
+  const popoverRef = useRef<HTMLDivElement>(null);
 
   // only render on client
   const [isClient, setIsClient] = useState(false);
@@ -49,18 +49,28 @@ export const HoveringToolbar = (props: HoveringToolbarProps) => {
       return;
     }
 
-    let x = rect.left + window.scrollX + rect.width / 2;
-    let y = rect.top + window.scrollY;
+    const editorEl = ReactEditor.toDOMNode(editor, editor);
+    const editorRect = editorEl.getBoundingClientRect();
 
-    if (dialogRef.current) {
-      const dialogRect = dialogRef.current.getBoundingClientRect();
-      x -= dialogRect.left;
+    let x = rect.left + 5;
+    let y = rect.top;
+
+    const isInsideDialog = editorEl.closest('[role="dialog"]');
+    if (isInsideDialog) {
+      const dialogRect = isInsideDialog.getBoundingClientRect();
       y -= dialogRect.top;
+      x -= dialogRect.left;
+    }
+
+    // Adjust position based on the middle of the viewport
+    const viewportHeight = window.innerHeight;
+    if (rect.top > viewportHeight / 2) {
+      y -= 100; // Show above
     }
 
     setPosition({ x, y });
 
-    console.log("Toolbar position:", { x, y, rect });
+    console.log("Toolbar position:", { x, y, rect, editorRect });
   }, [editor, selection, isDisplayed]);
 
   if (!isClient) {
@@ -68,9 +78,9 @@ export const HoveringToolbar = (props: HoveringToolbarProps) => {
   }
 
   return (
-    <div ref={dialogRef}>
       <Popover open={isDisplayed} onOpenChange={setIsDisplayed}>
         <PopoverContent
+          ref={popoverRef}
           className={
             props.hoverMenuClassname ||
             "z-50 flex flex-col justify-center items-center space-y-4 rounded-md border shadow-lg p-4 border-gray- bg-white"
@@ -79,8 +89,8 @@ export const HoveringToolbar = (props: HoveringToolbarProps) => {
             position: "absolute",
             left: `${position.x}px`,
             top: `${position.y}px`,
-            //transform: "translate(-50%, -100%)",
             width: "30rem",
+            overflowY: "auto"
           }}
         >
           {isDisplayed && selection && (
@@ -98,7 +108,6 @@ export const HoveringToolbar = (props: HoveringToolbarProps) => {
           )}
         </PopoverContent>
       </Popover>
-    </div>
   );
 };
 
