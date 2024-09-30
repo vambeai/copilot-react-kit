@@ -8,7 +8,9 @@ export function generateRandomString(length: number) {
   return result;
 }
 
-import { useState, useEffect, useRef } from "react";
+import clsx, { ClassValue } from "clsx";
+import { useEffect, useRef, useState } from "react";
+import { twMerge } from "tailwind-merge";
 
 export function useStateWithLocalStorage(
   defaultValue: string,
@@ -62,4 +64,8 @@ export async function speak(text: string) {
     };
   });
   await new Promise((resolve) => setTimeout(resolve, 500));
+}
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
 }

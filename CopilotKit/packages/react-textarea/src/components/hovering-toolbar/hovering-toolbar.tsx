@@ -11,6 +11,7 @@ import {
 } from "../../types/base/autosuggestions-bare-function";
 import { useHoveringEditorContext } from "./hovering-editor-provider";
 import { Menu, Portal } from "./hovering-toolbar-components";
+import { Popover, PopoverContent } from "./popover";
 import { HoveringInsertionPromptBox } from "./text-insertion-prompt-box";
 
 export interface HoveringToolbarProps {
@@ -109,7 +110,7 @@ export const HoveringToolbar = (props: HoveringToolbarProps) => {
   }
 
   return (
-    <Portal>
+    <Popover>
       <Menu
         ref={ref}
         className={
@@ -137,7 +138,7 @@ export const HoveringToolbar = (props: HoveringToolbarProps) => {
           />
         )}
       </Menu>
-    </Portal>
+    </Popover>
   );
 };
 
