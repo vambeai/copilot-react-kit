@@ -1,7 +1,7 @@
 {
   "private": false,
   "scripts": {
-    "build": "turbo build",
+    "build": "NODE_OPTIONS='--max-old-space-size=4096' turbo build",
     "dev": "turbo dev --concurrency 14",
     "lint": "turbo lint",
     "clean": "turbo clean",

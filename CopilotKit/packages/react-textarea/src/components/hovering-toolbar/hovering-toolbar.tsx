@@ -24,6 +24,7 @@ export const HoveringToolbar = (props: HoveringToolbarProps) => {
   const selection = useSlateSelection();
   const { isDisplayed, setIsDisplayed } = useHoveringEditorContext();
   const [position, setPosition] = useState({ x: 0, y: 0 });
+  const dialogRef = useRef<HTMLDivElement>(null); // Reference to the dialog
 
   // only render on client
   const [isClient, setIsClient] = useState(false);
@@ -48,8 +49,14 @@ export const HoveringToolbar = (props: HoveringToolbarProps) => {
       return;
     }
 
-    const x = rect.left + window.scrollX + rect.width / 2;
-    const y = rect.top + window.scrollY;
+    let x = rect.left + window.scrollX + rect.width / 2;
+    let y = rect.top + window.scrollY;
+
+    if (dialogRef.current) {
+      const dialogRect = dialogRef.current.getBoundingClientRect();
+      x -= dialogRect.left;
+      y -= dialogRect.top;
+    }
 
     setPosition({ x, y });
 
@@ -61,35 +68,37 @@ export const HoveringToolbar = (props: HoveringToolbarProps) => {
   }
 
   return (
-    <Popover open={isDisplayed} onOpenChange={setIsDisplayed}>
-      <PopoverContent
-        className={
-          props.hoverMenuClassname ||
-          "z-50 flex flex-col justify-center items-center space-y-4 rounded-md border shadow-lg p-4 border-gray- bg-white"
-        }
-        style={{
-          position: "absolute",
-          left: `${position.x}px`,
-          top: `${position.y}px`,
-          //transform: "translate(-50%, -100%)",
-          width: "35rem",
-        }}
-      >
-        {isDisplayed && selection && (
-          <HoveringInsertionPromptBox
-            editorState={editorState(editor, selection)}
-            apiConfig={props.apiConfig}
-            closeWindow={() => setIsDisplayed(false)}
-            language={props.language}
-            performInsertion={(insertedText) => {
-              Transforms.delete(editor, { at: selection });
-              Transforms.insertText(editor, insertedText, { at: selection });
-              setIsDisplayed(false);
-            }}
-          />
-        )}
-      </PopoverContent>
-    </Popover>
+    <div ref={dialogRef}>
+      <Popover open={isDisplayed} onOpenChange={setIsDisplayed}>
+        <PopoverContent
+          className={
+            props.hoverMenuClassname ||
+            "z-50 flex flex-col justify-center items-center space-y-4 rounded-md border shadow-lg p-4 border-gray- bg-white"
+          }
+          style={{
+            position: "absolute",
+            left: `${position.x}px`,
+            top: `${position.y}px`,
+            //transform: "translate(-50%, -100%)",
+            width: "30rem",
+          }}
+        >
+          {isDisplayed && selection && (
+            <HoveringInsertionPromptBox
+              editorState={editorState(editor, selection)}
+              apiConfig={props.apiConfig}
+              closeWindow={() => setIsDisplayed(false)}
+              language={props.language}
+              performInsertion={(insertedText) => {
+                Transforms.delete(editor, { at: selection });
+                Transforms.insertText(editor, insertedText, { at: selection });
+                setIsDisplayed(false);
+              }}
+            />
+          )}
+        </PopoverContent>
+      </Popover>
+    </div>
   );
 };
 
