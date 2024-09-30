@@ -86,6 +86,7 @@ export const HoveringToolbar = (props: HoveringToolbarProps) => {
     el.style.left = `${left}px`;
   });
 
+  // ver esto
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (ref.current && !ref.current.contains(event.target as Node)) {

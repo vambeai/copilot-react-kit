@@ -17,6 +17,7 @@ export const HoveringInsertionPromptBox = (props: Props) => {
     <div
       className="flex flex-col justify-center items-center space-y-4 rounded-md border shadow-lg p-4 border-gray- bg-white"
       style={{ width: "35rem" }}
+      onClick={(e) => e.stopPropagation()} // Prevent click event from propagating
     >
       <HoveringInsertionPromptBoxCore
         state={{
