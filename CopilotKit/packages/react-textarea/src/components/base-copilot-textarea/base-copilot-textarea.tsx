@@ -266,6 +266,7 @@ const BaseCopilotTextareaWithHoveringContext = React.forwardRef(
         <HoveringToolbar
           apiConfig={autosuggestionsConfig.apiConfig}
           hoverMenuClassname={hoverMenuClassname}
+          language={autosuggestionsConfig.language ?? "en"}
         />
         <Editable
           renderElement={renderElementMemoized}

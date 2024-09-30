@@ -8,6 +8,7 @@ export interface Props {
   editorState: EditingEditorState;
   apiConfig: InsertionEditorApiConfig;
   performInsertion: (insertedText: string) => void;
+  language: "en" | "es";
   closeWindow: () => void;
 }
 
@@ -21,6 +22,7 @@ export const HoveringInsertionPromptBox = (props: Props) => {
         state={{
           editorState: props.editorState,
         }}
+        language={props.language}
         insertionOrEditingFunction={props.apiConfig.insertionOrEditingFunction}
         performInsertion={props.performInsertion}
       />

@@ -20,12 +20,14 @@ export interface HoveringInsertionPromptBoxCoreProps {
   state: SuggestionState;
   performInsertion: (insertedText: string) => void;
   insertionOrEditingFunction: Generator_InsertionOrEditingSuggestion;
+  language: "en" | "es";
 }
 
 export const HoveringInsertionPromptBoxCore = ({
   performInsertion,
   state,
   insertionOrEditingFunction,
+  language,
 }: HoveringInsertionPromptBoxCoreProps) => {
   const [editSuggestion, setEditSuggestion] = useState<string>("");
   const [suggestionIsLoading, setSuggestionIsLoading] = useState<boolean>(false);
@@ -130,14 +132,32 @@ export const HoveringInsertionPromptBoxCore = ({
   const isLoading = suggestionIsLoading;
 
   const textToEdit = editSuggestion || state.editorState.selectedText;
+  const translations = {
+    "Describe the text you want to insert": {
+      en: "Describe the text you want to insert",
+      es: "Describe el texto que quieres insertar",
+    },
+    "Describe adjustments to the suggested text": {
+      en: "Describe adjustments to the suggested text",
+      es: "Describe ajustes al texto sugerido",
+    },
+    "e.g. 'summarize the client's top 3 pain-points'": {
+      en: "e.g. 'summarize the client's top 3 pain-points'",
+      es: "e.g. 'resuma los 3 puntos más dolorosos del cliente'",
+    },
+    "e.g. 'make it more formal', 'be more specific', ...": {
+      en: "e.g. 'make it more formal', 'be more specific', ...",
+      es: "e.g. 'haga que sea más formal', 'sea más específico', ...",
+    },
+  };
   const adjustmentLabel =
     textToEdit === ""
-      ? "Describe the text you want to insert"
-      : "Describe adjustments to the suggested text";
+      ? translations["Describe the text you want to insert"][language]
+      : translations["Describe adjustments to the suggested text"][language];
   const placeholder =
     textToEdit === ""
-      ? "e.g. 'summarize the client's top 3 pain-points from @CallTranscript'"
-      : "e.g. 'make it more formal', 'be more specific', ...";
+      ? translations["e.g. 'summarize the client's top 3 pain-points'"][language]
+      : translations["e.g. 'make it more formal', 'be more specific', ..."][language];
 
   const { setIsDisplayed } = useHoveringEditorContext();
 

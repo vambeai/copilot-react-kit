@@ -16,6 +16,7 @@ import { HoveringInsertionPromptBox } from "./text-insertion-prompt-box";
 export interface HoveringToolbarProps {
   apiConfig: InsertionEditorApiConfig;
   hoverMenuClassname: string | undefined;
+  language: "en" | "es";
 }
 
 export const HoveringToolbar = (props: HoveringToolbarProps) => {
@@ -119,6 +120,7 @@ export const HoveringToolbar = (props: HoveringToolbarProps) => {
             closeWindow={() => {
               setIsDisplayed(false);
             }}
+            language={props.language}
             performInsertion={(insertedText) => {
               // replace the selection with the inserted text
               Transforms.delete(editor, { at: selection });
