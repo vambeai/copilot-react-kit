@@ -248,7 +248,7 @@ export const HoveringInsertionPromptBoxCore = ({
     : undefined;
 
   return (
-    <div className="w-full flex flex-col items-start relative gap-2 z-[55]">
+    <div className="w-full flex flex-col items-start relative gap-2 z-50">
       {AdjustmentPromptComponent}
       {sourceSearchWord !== undefined && <SourceSearchBox searchTerm={sourceSearchWord} />}
       {generatingSuggestion ? SuggestionComponent : null}
