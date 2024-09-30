@@ -153,6 +153,14 @@ export const HoveringInsertionPromptBoxCore = ({
       en: "e.g. 'make it more formal', 'be more specific', ...",
       es: "e.g. 'haga que sea más formal', 'sea más específico', ...",
     },
+    Suggested: {
+      en: "Suggested",
+      es: "Sugerido",
+    },
+    Insert: {
+      en: "Insert",
+      es: "Insertar",
+    },
   };
   const adjustmentLabel =
     textToEdit === ""
@@ -208,7 +216,7 @@ export const HoveringInsertionPromptBoxCore = ({
   const SuggestionComponent = (
     <>
       <div className="flex justify-between items-end w-full">
-        <Label className="mt-4">Suggested:</Label>
+        <Label className="mt-4">{translations["Suggested"][language]}:</Label>
         <div className="ml-auto">
           {isLoading && (
             <div className="flex justify-center items-center">
@@ -229,7 +237,7 @@ export const HoveringInsertionPromptBoxCore = ({
         value={editSuggestion}
         disabled={suggestionIsLoading}
         onChange={(e) => setEditSuggestion(e.target.value)}
-        className="w-full text-base p-2 border border-gray-300 rounded-md resize-none bg-green-50"
+        className="w-full text-sm p-2 border border-gray-300 rounded-md resize-none bg-green-50"
         style={{ overflow: "auto", maxHeight: "10em" }}
       />
     </>
@@ -238,14 +246,14 @@ export const HoveringInsertionPromptBoxCore = ({
   const SubmitComponent = (
     <div className="flex w-full gap-4 justify-start">
       <Button
-        className=" bg-green-700 text-white"
+        className=" bg-green-700 text-white hover:bg-green-800"
         onClick={(event) => {
           event.preventDefault();
           event.stopPropagation();
           performInsertion(editSuggestion);
         }}
       >
-        Insert <MdCheck className="text-2xl" />
+        {translations["Insert"][language]} <MdCheck className="text-2xl" />
       </Button>
     </div>
   );
