@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { DestinationTable } from "./destination-table";
-import { VacationNotes } from "./vacation-notes";
+import { VacationNotes, VacationNotesDialog } from "./vacation-notes";
 import { useMakeCopilotDocumentReadable, DocumentPointer } from "@copilotkit/react-core";
 
 export type Destination = {
@@ -46,7 +46,7 @@ export function VacationList() {
       <div className="mt-8 flow-root bg-slate-200">
         <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-            <VacationNotes />
+            <VacationNotesDialog />
           </div>
         </div>
       </div>
@@ -54,6 +54,7 @@ export function VacationList() {
         <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
             <DestinationTable destinations={visitedDestinations} heading="Visited Destinations" />
+            <VacationNotes />
           </div>
         </div>
       </div>
@@ -61,6 +62,7 @@ export function VacationList() {
         <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
             <DestinationTable destinations={newDestinations} heading="New Destinations" />
+            <VacationNotes />
           </div>
         </div>
       </div>
