@@ -65,7 +65,13 @@ export const HoveringToolbar = (props: HoveringToolbarProps) => {
     // Adjust position based on the middle of the viewport
     const viewportHeight = window.innerHeight;
     if (rect.top > viewportHeight / 2) {
-      y -= 100; // Show above
+      y -= 100;
+    } else {
+      y += 20;
+    }
+
+    if (y < 0) {
+      y = 5;
     }
 
     setPosition({ x, y });
