@@ -188,7 +188,11 @@ export const HoveringInsertionPromptBoxCore = ({
           rows={1}
         />
         <button
-          onClick={beginGeneratingAdjustment}
+          onClick={(event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            beginGeneratingAdjustment();
+          }}
           className="absolute right-2 bg-blue-500 text-white w-8 h-8 rounded-full flex items-center justify-center"
         >
           <MdArrowForward className="text-2xl" />
@@ -231,7 +235,9 @@ export const HoveringInsertionPromptBoxCore = ({
     <div className="flex w-full gap-4 justify-start">
       <Button
         className=" bg-green-700 text-white"
-        onClick={() => {
+        onClick={(event) => {
+          event.preventDefault();
+          event.stopPropagation();
           performInsertion(editSuggestion);
         }}
       >
