@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Editor, Location, Transforms } from "slate";
 import { useSlate, useSlateSelection } from "slate-react";
 import {
@@ -10,7 +10,6 @@ import {
   InsertionEditorApiConfig,
 } from "../../types/base/autosuggestions-bare-function";
 import { useHoveringEditorContext } from "./hovering-editor-provider";
-import { Menu, Portal } from "./hovering-toolbar-components";
 import { Popover, PopoverContent } from "./popover";
 import { HoveringInsertionPromptBox } from "./text-insertion-prompt-box";
 
@@ -21,10 +20,10 @@ export interface HoveringToolbarProps {
 }
 
 export const HoveringToolbar = (props: HoveringToolbarProps) => {
-  const ref = useRef<HTMLDivElement>(null);
   const editor = useSlate();
   const selection = useSlateSelection();
   const { isDisplayed, setIsDisplayed } = useHoveringEditorContext();
+  const [position, setPosition] = useState({ x: 0, y: 0 });
 
   // only render on client
   const [isClient, setIsClient] = useState(false);
@@ -33,15 +32,7 @@ export const HoveringToolbar = (props: HoveringToolbarProps) => {
   }, []);
 
   useEffect(() => {
-    const el = ref.current;
-    const { selection } = editor;
-
-    if (!el) {
-      return;
-    }
-
-    if (!selection) {
-      el.removeAttribute("style");
+    if (!selection || !isDisplayed) {
       return;
     }
 
@@ -53,104 +44,62 @@ export const HoveringToolbar = (props: HoveringToolbarProps) => {
     const domRange = domSelection.getRangeAt(0);
     const rect = domRange.getBoundingClientRect();
 
-    // We use window = (0,0,0,0) as a signal that the selection is not in the original copilot-textarea,
-    // but inside the hovering window.
-    //
-    // in such case, we simply do nothing.
     if (rect.top === 0 && rect.left === 0 && rect.width === 0 && rect.height === 0) {
       return;
     }
-    const minGapFromEdge = 60;
-    const verticalOffsetFromCorner = 35;
-    const horizontalOffsetFromCorner = 15;
-    let top = rect.top + window.scrollY - el.offsetHeight + verticalOffsetFromCorner;
-    // make sure top is in the viewport and not too close to the edge
-    if (top < minGapFromEdge) {
-      top = rect.bottom + window.scrollY + minGapFromEdge;
-    } else if (top + el.offsetHeight > window.innerHeight - minGapFromEdge) {
-      top = rect.top + window.scrollY - el.offsetHeight - minGapFromEdge;
-    }
 
-    let left =
-      rect.left + window.scrollX - el.offsetWidth / 2 + rect.width / 2 + horizontalOffsetFromCorner;
-    // make sure left is in the viewport and not too close to the edge
-    if (left < minGapFromEdge) {
-      left = minGapFromEdge;
-    } else if (left + el.offsetWidth > window.innerWidth - minGapFromEdge) {
-      left = window.innerWidth - el.offsetWidth - minGapFromEdge;
-    }
+    const x = rect.left + window.scrollX + rect.width / 2;
+    const y = rect.top + window.scrollY;
 
-    el.style.opacity = "1";
-    el.style.position = "absolute";
+    setPosition({ x, y });
 
-    el.style.top = `${top}px`;
-    el.style.left = `${left}px`;
-  });
-
-  // ver esto
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (ref.current && !ref.current.contains(event.target as Node)) {
-        console.log("click outside");
-        console.log(ref.current.contains(event.target as Node));
-        console.log(event.target);
-        console.log(ref.current);
-        setIsDisplayed(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [ref, setIsDisplayed]);
+    console.log("Toolbar position:", { x, y, rect });
+  }, [editor, selection, isDisplayed]);
 
   if (!isClient) {
     return null;
   }
 
   return (
-    <Popover>
-      <Menu
-        ref={ref}
+    <Popover open={isDisplayed} onOpenChange={setIsDisplayed}>
+      <PopoverContent
         className={
-          "copilot-kit-textarea-css-scope " +
-          (props.hoverMenuClassname ||
-            "p-2 absolute z-50 top-[-10000px] left-[-10000px] mt-[-6px] opacity-0 transition-opacity duration-700")
+          props.hoverMenuClassname ||
+          "z-50 flex flex-col justify-center items-center space-y-4 rounded-md border shadow-lg p-4 border-gray- bg-white"
         }
+        style={{
+          position: "absolute",
+          left: `${position.x}px`,
+          top: `${position.y}px`,
+          //transform: "translate(-50%, -100%)",
+          width: "35rem",
+        }}
       >
         {isDisplayed && selection && (
           <HoveringInsertionPromptBox
             editorState={editorState(editor, selection)}
             apiConfig={props.apiConfig}
-            closeWindow={() => {
-              setIsDisplayed(false);
-            }}
+            closeWindow={() => setIsDisplayed(false)}
             language={props.language}
             performInsertion={(insertedText) => {
-              // replace the selection with the inserted text
               Transforms.delete(editor, { at: selection });
-              Transforms.insertText(editor, insertedText, {
-                at: selection,
-              });
+              Transforms.insertText(editor, insertedText, { at: selection });
               setIsDisplayed(false);
             }}
           />
         )}
-      </Menu>
+      </PopoverContent>
     </Popover>
   );
 };
 
 function editorState(editor: Editor, selection: Location): EditingEditorState {
   const textAroundCursor = getTextAroundSelection(editor);
-  if (textAroundCursor) {
-    return textAroundCursor;
-  }
-
-  return {
-    textBeforeCursor: getFullEditorTextWithNewlines(editor),
-    textAfterCursor: "",
-    selectedText: "",
-  };
+  return (
+    textAroundCursor || {
+      textBeforeCursor: getFullEditorTextWithNewlines(editor),
+      textAfterCursor: "",
+      selectedText: "",
+    }
+  );
 }
