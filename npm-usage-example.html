@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CopilotTextarea npm Usage Example</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Import the CopilotTextarea package from npm -->
+    <script src="https://unpkg.com/copilot-react-textarea@1.5.0/dist/index.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      .auto-resize-textarea {
+        min-height: 38px;
+        transition: height 0.2s ease;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 min-h-screen p-8">
+    <div
+      id="root"
+      class="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md"
+    ></div>
+
+    <script type="text/babel">
+      // Example usage of CopilotTextarea with the new allowMultipleRows prop
+      function App() {
+        const [value1, setValue1] = React.useState("");
+        const [value2, setValue2] = React.useState("");
+
+        // Mock functions for testing
+        const mockCreateSuggestion = async () => "suggestion";
+        const mockInsertionOrEditing = async () =>
+          new ReadableStream({
+            start(controller) {
+              controller.close();
+            },
+          });
+
+        return (
+          <div>
+            <h1 className="text-2xl font-bold mb-6">
+              CopilotTextarea npm Usage Example
+            </h1>
+
+            <div className="mb-6">
+              <h2 className="text-lg font-semibold mb-2">
+                Single Row Textarea (allowMultipleRows=false)
+              </h2>
+              <p className="text-gray-600 mb-2">
+                This textarea will always remain a single row, regardless of
+                content.
+              </p>
+              <CopilotTextarea
+                textareaPurpose="Testing"
+                createSuggestionFunction={mockCreateSuggestion}
+                insertionOrEditingFunction={mockInsertionOrEditing}
+                value={value1}
+                onValueChange={setValue1}
+                placeholder="Type something... (will stay as one row)"
+                className="border border-gray-300 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                allowMultipleRows={false}
+              />
+            </div>
+
+            <div className="mb-6">
+              <h2 className="text-lg font-semibold mb-2">
+                Multi-row Textarea (allowMultipleRows=true)
+              </h2>
+              <p className="text-gray-600 mb-2">
+                This textarea will grow with content as you type.
+              </p>
+              <CopilotTextarea
+                textareaPurpose="Testing"
+                createSuggestionFunction={mockCreateSuggestion}
+                insertionOrEditingFunction={mockInsertionOrEditing}
+                value={value2}
+                onValueChange={setValue2}
+                placeholder="Type something... (will grow with content)"
+                className="border border-gray-300 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                allowMultipleRows={true}
+              />
+            </div>
+
+            <div className="mt-8 p-4 bg-gray-100 rounded">
+              <h3 className="font-semibold mb-2">Current Values:</h3>
+              <div className="mb-2">
+                <strong>Single Row:</strong>{" "}
+                <span className="font-mono">{value1}</span>
+              </div>
+              <div>
+                <strong>Multi Row:</strong>{" "}
+                <pre className="font-mono bg-gray-200 p-2 rounded mt-1">
+                  {value2}
+                </pre>
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      ReactDOM.render(<App />, document.getElementById("root"));
+    </script>
+  </body>
+</html>

@@ -8,6 +8,13 @@ import { BaseCopilotTextareaApiConfig } from "./autosuggestions-bare-function";
 export interface BaseCopilotTextareaProps
   extends Omit<TextareaHTMLAttributes<HTMLDivElement>, "onChange" | "onKeyDown"> {
   /**
+   * Determines whether the textarea should allow multiple rows based on content.
+   * If false (default), the textarea will always stay as a single row regardless of content.
+   * If true, the textarea will grow with content based on the number of lines.
+   * Default is `false`.
+   */
+  allowMultipleRows?: boolean;
+  /**
    * Determines whether the CopilotKit branding should be disabled. Default is `false`.
    */
   disableBranding?: boolean;

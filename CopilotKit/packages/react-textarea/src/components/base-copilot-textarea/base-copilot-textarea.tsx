@@ -90,6 +90,34 @@ const BaseCopilotTextareaWithHoveringContext = React.forwardRef(
     const valueOnInitialRender = useMemo(() => props.value ?? "", []);
     const [lastKnownFullEditorText, setLastKnownFullEditorText] = useState(valueOnInitialRender);
     const [cursorMovedSinceLastTextChange, setCursorMovedSinceLastTextChange] = useState(false);
+    const [rows, setRows] = useState(1);
+
+    // Function to calculate and set rows based on content
+    const updateRows = useCallback(
+      (value: string) => {
+        if (!value) {
+          setRows(1);
+          return;
+        }
+
+        // Count newlines in the text
+        const lineCount = (value.match(/\n/g) || []).length + 1;
+
+        // If allowMultipleRows is false, always keep it at 1 row
+        if (props.allowMultipleRows === false) {
+          setRows(1);
+        } else {
+          // Otherwise, set rows based on content (with a minimum of 1)
+          setRows(Math.max(1, lineCount));
+        }
+      },
+      [props.allowMultipleRows],
+    );
+
+    // Update rows when value changes
+    useEffect(() => {
+      updateRows(props.value || "");
+    }, [props.value, updateRows]);
 
     // // When the editor text changes, we want to reset the `textEditedSinceLastCursorMovement` state.
     // useEffect(() => {
@@ -232,8 +260,14 @@ const BaseCopilotTextareaWithHoveringContext = React.forwardRef(
     const moddedClassName = (() => {
       const baseClassName = "copilot-textarea";
       const brandingClass = disableBranding ? "no-branding" : "with-branding";
-      const defaultTailwindClassName = "bg-white overflow-y-auto resize-y";
-      const mergedClassName = twMerge(defaultTailwindClassName, className ?? "");
+      const defaultTailwindClassName = "bg-white";
+      // Set overflow and resize based on allowMultipleRows
+      const overflowClass = props.allowMultipleRows ? "overflow-y-auto" : "overflow-hidden";
+      const resizeClass = props.allowMultipleRows ? "resize-y" : "resize-none";
+      const mergedClassName = twMerge(
+        `${defaultTailwindClassName} ${overflowClass} ${resizeClass}`,
+        className ?? "",
+      );
       return `${baseClassName} ${brandingClass} ${mergedClassName}`;
     })();
 
@@ -251,6 +285,8 @@ const BaseCopilotTextareaWithHoveringContext = React.forwardRef(
           setLastKnownFullEditorText((prev) => {
             if (prev !== fullEditorText) {
               setCursorMovedSinceLastTextChange(false);
+              // Update rows when text changes
+              updateRows(fullEditorText);
             }
             return fullEditorText;
           });
@@ -285,7 +321,7 @@ const BaseCopilotTextareaWithHoveringContext = React.forwardRef(
             props.onBlur?.(ev);
             clearAutocompletionsFromEditor(editor);
           }}
-          rows={props.rows ?? 2}
+          rows={props.rows ?? rows}
           {...propsToForward}
         />
       </Slate>

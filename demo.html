@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Auto-Resize Textarea Demo</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      .auto-resize-textarea {
+        min-height: 38px;
+        transition: height 0.2s ease;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 min-h-screen p-8">
+    <div class="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md">
+      <h1 class="text-2xl font-bold mb-6">Auto-Resize Textarea Demo</h1>
+
+      <div class="mb-6">
+        <h2 class="text-lg font-semibold mb-2">
+          Single Row Textarea (allowMultipleRows=false)
+        </h2>
+        <p class="text-gray-600 mb-2">
+          This textarea will always remain a single row, regardless of content.
+        </p>
+        <textarea
+          id="singleRowTextarea"
+          placeholder="Type something... (will stay as one row)"
+          class="auto-resize-textarea border border-gray-300 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+          rows="1"
+          style="resize: none; overflow: hidden"
+        ></textarea>
+      </div>
+
+      <div class="mb-6">
+        <h2 class="text-lg font-semibold mb-2">
+          Multi-row Textarea (allowMultipleRows=true)
+        </h2>
+        <p class="text-gray-600 mb-2">
+          This textarea will grow with content as you type.
+        </p>
+        <textarea
+          id="multiRowTextarea"
+          placeholder="Type something... (will grow with content)"
+          class="auto-resize-textarea border border-gray-300 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+          rows="1"
+          style="resize: vertical; overflow: auto"
+        ></textarea>
+      </div>
+
+      <div class="mt-8 p-4 bg-gray-100 rounded">
+        <h3 class="font-semibold mb-2">Current Values:</h3>
+        <div class="mb-2">
+          <strong>Single Row:</strong>
+          <span id="singleRowValue" class="font-mono"></span>
+        </div>
+        <div>
+          <strong>Multi Row:</strong>
+          <pre
+            id="multiRowValue"
+            class="font-mono bg-gray-200 p-2 rounded mt-1"
+          ></pre>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Function to update the display of current values
+      function updateValueDisplay(textareaId, displayId) {
+        const textarea = document.getElementById(textareaId);
+        const display = document.getElementById(displayId);
+        display.textContent = textarea.value;
+      }
+
+      // Function to handle auto-resizing for multi-row textarea
+      function autoResizeMultiRow(textarea) {
+        // Reset height to auto to get the correct scrollHeight
+        textarea.style.height = "auto";
+
+        // Set the height to the scrollHeight to fit the content
+        textarea.style.height = textarea.scrollHeight + "px";
+      }
+
+      // Set up event listeners for the single row textarea
+      const singleRowTextarea = document.getElementById("singleRowTextarea");
+      singleRowTextarea.addEventListener("input", function () {
+        updateValueDisplay("singleRowTextarea", "singleRowValue");
+      });
+
+      // Set up event listeners for the multi-row textarea
+      const multiRowTextarea = document.getElementById("multiRowTextarea");
+      multiRowTextarea.addEventListener("input", function () {
+        updateValueDisplay("multiRowTextarea", "multiRowValue");
+
+        // Only auto-resize if it has the allowMultipleRows attribute
+        if (this.getAttribute("data-allow-multiple-rows") === "true") {
+          autoResizeMultiRow(this);
+        }
+      });
+
+      // Set the allowMultipleRows attribute
+      multiRowTextarea.setAttribute("data-allow-multiple-rows", "true");
+
+      // Initialize auto-resize for multi-row textarea
+      autoResizeMultiRow(multiRowTextarea);
+    </script>
+  </body>
+</html>
