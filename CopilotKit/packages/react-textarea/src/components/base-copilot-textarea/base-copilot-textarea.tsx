@@ -264,8 +264,10 @@ const BaseCopilotTextareaWithHoveringContext = React.forwardRef(
       // Set overflow and resize based on allowMultipleRows
       const overflowClass = props.allowMultipleRows ? "overflow-y-auto" : "overflow-hidden";
       const resizeClass = props.allowMultipleRows ? "resize-y" : "resize-none";
+      // Add word-wrap and white-space properties to handle long text
+      const textWrapClass = "break-words whitespace-pre-wrap";
       const mergedClassName = twMerge(
-        `${defaultTailwindClassName} ${overflowClass} ${resizeClass}`,
+        `${defaultTailwindClassName} ${overflowClass} ${resizeClass} ${textWrapClass}`,
         className ?? "",
       );
       return `${baseClassName} ${brandingClass} ${mergedClassName}`;

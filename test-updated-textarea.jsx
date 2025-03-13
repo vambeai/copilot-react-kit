@@ -10,9 +10,19 @@ const mockInsertionOrEditing = async () =>
     },
   });
 
+// Long URL for testing text wrapping
+const longUrl =
+  "https://docs.google.com/forms/d/e/1FAlpQLScgM8AM6Nlaq2vqKamobHavkYMSBMeO6fNvaNqhF0pgalTmaA/viewform";
+
 export default function TestUpdatedTextarea() {
-  const [value1, setValue1] = useState("");
-  const [value2, setValue2] = useState("");
+  const [value1, setValue1] = useState(
+    "SIEMPRE indica al cliente que debe solicitar su hora a través del siguiente formulario: " +
+      longUrl
+  );
+  const [value2, setValue2] = useState(
+    "SIEMPRE indica al cliente que debe solicitar su hora a través del siguiente formulario: " +
+      longUrl
+  );
 
   return (
     <div className="p-4">
