@@ -44,3 +44,14 @@
 # Documentation
 
 To get started with CopilotKit, please check out the [documentation](https://docs.copilotkit.ai).
+
+## Styling
+
+Starting from version X.Y.Z, styles are no longer automatically injected. You need to import the styles manually in your application:
+
+```tsx
+// Import the styles in your application entry point
+import "@copilotkit/react-ui/styles.css";
+```
+
+This change prevents style conflicts and gives you more control over when and where styles are loaded.

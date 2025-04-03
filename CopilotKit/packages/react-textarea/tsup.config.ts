@@ -1,6 +1,6 @@
 import path from "path";
 import fs from "fs";
-import { defineConfig, Options } from "tsup-async-inject-style";
+import { defineConfig, Options } from "tsup";
 import postcss from "postcss";
 import autoprefixer from "autoprefixer";
 import tailwindcss from "tailwindcss";
@@ -25,39 +25,33 @@ export default defineConfig((options: Options) => {
       "**/__tests__/*", // Exclude any files inside a __tests__ directory
     ],
     onSuccess: async () => {
-      // Create index.css file for backwards compatibility
-      fs.writeFileSync(
-        path.resolve(process.cwd(), "dist/index.css"),
-        `/* This is here for backwards compatibility */`,
-      );
-    },
-    injectStyle: async (_, filePath) => {
-      const cwd = process.cwd();
-      const outputPath = path.resolve(cwd, "dist/index.css");
-      const rawCSS = fs.readFileSync(filePath, "utf8");
+      // Process CSS but don't inject it, just write to file for external import
+      const cssInputFile = path.resolve(process.cwd(), 'src/styles.css');
+      
+      if (fs.existsSync(cssInputFile)) {
+        const outputPath = path.resolve(process.cwd(), "dist/index.css");
+        const rawCSS = fs.readFileSync(cssInputFile, "utf8");
 
-      const resultCSS = await postcss([
-        postcssImport(),
-        postcssNested(),
-        postcssPrefixSelector({
-          prefix: ".copilot-kit-textarea-css-scope",
-        }),
-        tailwindcss,
-        autoprefixer,
-        cssnano({ preset: "default" }),
-      ]).process(rawCSS, { from: filePath, to: outputPath });
+        const resultCSS = await postcss([
+          postcssImport(),
+          postcssNested(),
+          postcssPrefixSelector({
+            prefix: ".copilot-kit-textarea-css-scope",
+          }),
+          tailwindcss,
+          autoprefixer,
+          cssnano({ preset: "default" }),
+        ]).process(rawCSS, { from: cssInputFile, to: outputPath });
 
-      if (resultCSS.css === undefined) {
-        throw new Error("No CSS output");
-      }
-
-      return `
-        if (globalThis.hasOwnProperty("document")) {
-          const style = document?.createElement("style");
-          style.innerHTML = '${resultCSS}';
-          document?.head.appendChild(style);
+        if (resultCSS.css !== undefined) {
+          fs.writeFileSync(outputPath, resultCSS.css);
         }
-      `;
+      } else {
+        fs.writeFileSync(
+          path.resolve(process.cwd(), "dist/index.css"),
+          `/* This is here for backwards compatibility */`,
+        );
+      }
     },
     ...options,
   };

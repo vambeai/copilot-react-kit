@@ -82,3 +82,24 @@ Test components have been created to demonstrate the functionality:
 2. **Better Layout Integrity**: Long content no longer breaks the layout by expanding the textarea horizontally.
 3. **Flexibility**: Developers can choose whether they want a fixed single-row textarea or a multi-row textarea that grows with content.
 4. **Consistency**: The default behavior (single row) ensures that the textarea takes up minimal space by default, which is often desirable in UI design.
+
+# CHANGES
+
+## [Unreleased]
+
+### Breaking Changes
+
+- **Removed automatic style injection**: Previously, Tailwind CSS styles were automatically injected into the document head via a style tag. This has been changed to prevent potential style conflicts. Users now need to explicitly import styles:
+  ```tsx
+  // For react-ui
+  import "@copilotkit/react-ui/styles.css";
+  
+  // For react-textarea
+  import "copilot-react-textarea/styles.css";
+  ```
+
+### Technical Changes
+
+- Replaced `tsup-async-inject-style` with regular `tsup` in build process
+- Modified build configuration to generate CSS files without automatic injection
+- Removed automatic style imports from package entry points
