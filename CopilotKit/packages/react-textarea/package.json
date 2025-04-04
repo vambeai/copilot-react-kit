@@ -24,6 +24,11 @@
     "./styles.css": "./dist/index.css"
   },
   "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "license": "MIT",
   "scripts": {
     "build": "tsup --clean",
