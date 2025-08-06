@@ -44,6 +44,12 @@ function nodeChildrenToTextComponents(
             return nodeChildrenToTextComponents(editor, node.children);
           case "suggestion":
             return [];
+          default:
+            // For unknown element types, try to extract children if they exist
+            if ("children" in node && Array.isArray((node as any).children)) {
+              return nodeChildrenToTextComponents(editor, (node as any).children);
+            }
+            return [];
         }
       } else {
         return [node];
@@ -55,7 +61,10 @@ function nodeChildrenToTextComponents(
 export const editorToText = (editor: BaseEditor & ReactEditor & HistoryEditor) => {
   const flattened = nodeChildrenToTextComponents(editor, editor.children);
 
-  const text = flattened.map((textComponent) => textComponent.text).join("\n");
+  const text = flattened
+    .filter((textComponent) => textComponent && typeof textComponent.text === "string")
+    .map((textComponent) => textComponent.text)
+    .join("\n");
 
   return text;
 };
