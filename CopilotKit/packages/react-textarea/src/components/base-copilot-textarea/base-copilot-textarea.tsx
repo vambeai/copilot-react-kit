@@ -252,10 +252,17 @@ const BaseCopilotTextareaWithHoveringContext = React.forwardRef(
       onChange,
       onKeyDown,
       disableBranding,
+      decorate,
+      renderLeaf,
+      editorRef,
       ...propsToForward
     } = props;
 
     usePopulateCopilotTextareaRef(editor, ref);
+
+    useEffect(() => {
+      editorRef?.(editor);
+    }, [editor, editorRef]);
 
     const moddedClassName = (() => {
       const baseClassName = "copilot-textarea";
@@ -309,6 +316,8 @@ const BaseCopilotTextareaWithHoveringContext = React.forwardRef(
         <Editable
           renderElement={renderElementMemoized}
           renderPlaceholder={renderPlaceholderMemoized}
+          decorate={decorate}
+          renderLeaf={renderLeaf}
           onKeyDown={(event) => {
             onKeyDownHandlerForHoveringEditor(event); // forward the event for internal use
             onKeyDownHandlerForAutocomplete(event); // forward the event for internal use
