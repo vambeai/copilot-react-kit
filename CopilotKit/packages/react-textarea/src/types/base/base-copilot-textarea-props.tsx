@@ -88,8 +88,10 @@ export interface BaseCopilotTextareaProps
   renderLeaf?: EditableProps["renderLeaf"];
 
   /**
-   * Callback invoked once with the underlying Slate editor instance.
+   * Callback invoked with the underlying Slate editor instance on mount,
+   * and again if the callback identity changes — memoize it. Called with
+   * `null` on unmount so consumers can drop their reference.
    * Allows consumers to apply programmatic edits (e.g. Transforms).
    */
-  editorRef?: (editor: CustomEditor) => void;
+  editorRef?: (editor: CustomEditor | null) => void;
 }

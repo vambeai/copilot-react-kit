@@ -262,6 +262,7 @@ const BaseCopilotTextareaWithHoveringContext = React.forwardRef(
 
     useEffect(() => {
       editorRef?.(editor);
+      return () => editorRef?.(null);
     }, [editor, editorRef]);
 
     const moddedClassName = (() => {
