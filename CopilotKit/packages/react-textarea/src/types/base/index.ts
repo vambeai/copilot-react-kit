@@ -4,3 +4,4 @@ export type { AutosuggestionsBareFunction } from "./autosuggestions-bare-functio
 export type { BaseAutosuggestionsConfig } from "./base-autosuggestions-config";
 
 export type { BaseCopilotTextareaProps } from "./base-copilot-textarea-props";
+export type { CustomEditor } from "./custom-editor";

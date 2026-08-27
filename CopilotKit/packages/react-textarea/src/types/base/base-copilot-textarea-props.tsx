@@ -1,6 +1,10 @@
 import { TextareaHTMLAttributes } from "react";
+import { Editable } from "slate-react";
 import { BaseAutosuggestionsConfig } from ".";
 import { BaseCopilotTextareaApiConfig } from "./autosuggestions-bare-function";
+import { CustomEditor } from "./custom-editor";
+
+type EditableProps = React.ComponentProps<typeof Editable>;
 
 /**
  * `BaseCopilotTextareaProps` defines the properties for the `BaseCopilotTextarea` component.
@@ -69,4 +73,25 @@ export interface BaseCopilotTextareaProps
     textareaPurpose: string;
     apiConfig: BaseCopilotTextareaApiConfig;
   };
+
+  /**
+   * Slate `decorate` function forwarded to the underlying `Editable`.
+   * Allows consumers to attach ephemeral ranges (e.g. spellcheck underlines)
+   * without modifying the document.
+   */
+  decorate?: EditableProps["decorate"];
+
+  /**
+   * Slate `renderLeaf` function forwarded to the underlying `Editable`.
+   * Allows consumers to render decorated ranges produced by `decorate`.
+   */
+  renderLeaf?: EditableProps["renderLeaf"];
+
+  /**
+   * Callback invoked with the underlying Slate editor instance on mount,
+   * and again if the callback identity changes — memoize it. Called with
+   * `null` on unmount so consumers can drop their reference.
+   * Allows consumers to apply programmatic edits (e.g. Transforms).
+   */
+  editorRef?: (editor: CustomEditor | null) => void;
 }
