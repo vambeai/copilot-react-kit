@@ -18,7 +18,7 @@ export type SuggestionElement = {
 
 export type CustomElement = ParagraphElement | SuggestionElement;
 export type SuggestionAwareText = { text: string };
-export type CustomText = SuggestionAwareText;
+export type CustomText = SuggestionAwareText & { [key: string]: unknown };
 
 declare module "slate" {
   interface CustomTypes {
