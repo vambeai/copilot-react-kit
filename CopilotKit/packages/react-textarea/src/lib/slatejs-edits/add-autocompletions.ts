@@ -1,4 +1,4 @@
-import { BasePoint, Transforms } from "slate";
+import { BasePoint, Point, Range, Transforms } from "slate";
 import { CustomEditor } from "../../types/base/custom-editor";
 
 export function addAutocompletionsToEditor(
@@ -7,6 +7,15 @@ export function addAutocompletionsToEditor(
   point: BasePoint,
 ) {
   const editorPosition = editor.selection;
+
+  // the suggestion is stale if the cursor moved since it was requested
+  if (
+    !editorPosition ||
+    !Range.isCollapsed(editorPosition) ||
+    !Point.equals(editorPosition.anchor, point)
+  ) {
+    return;
+  }
 
   Transforms.insertNodes(
     editor,
@@ -24,7 +33,5 @@ export function addAutocompletionsToEditor(
   );
 
   // restore cursor position
-  if (editorPosition) {
-    editor.selection = editorPosition;
-  }
+  editor.selection = editorPosition;
 }
